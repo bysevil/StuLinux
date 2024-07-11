@@ -52,6 +52,6 @@ void UDPServer::Run(fun_t handle, size_t size_buf)
         std::cout << "Run not Init" << std::endl;
         exit(0);
     }
-    std::thread t1(&UDPServer::_Run,this,handle, size_buf);
-    t1.join();
+    std::thread t(&UDPServer::_Run,this,handle, size_buf);
+    t.join();
 }
