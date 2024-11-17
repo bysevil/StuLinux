@@ -1,5 +1,6 @@
 #include"udpserver.h"
 
+//对消息进行处理
 std::string handle(std::string&& str){
     std::cout << "handle start" << std::endl;
     std::string ret;
@@ -9,6 +10,7 @@ std::string handle(std::string&& str){
     return ret;
 }
 
+//启动服务器
 int main(int argc,char* argv[]){
     UDPServer server;
     if(argc > 1){
