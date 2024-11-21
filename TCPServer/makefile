@@ -1,10 +1,10 @@
 tcp:
 	make tcpclient
 	make tcpserver
-tcpserver:TCPServer.hpp
+tcpserver:TCPServer.hpp ServerTest.cc
 	g++ -o $@ $^
 
-tcpclient:TCPClient.hpp
+tcpclient:TCPClient.cc
 	g++ -o $@ $^
 
 .PHONY:clean
