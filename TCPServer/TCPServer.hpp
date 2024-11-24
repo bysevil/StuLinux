@@ -8,7 +8,8 @@
 #include<sys/wait.h>
 #include<cstring>
 #include<thread>
-
+#include"ThreadPool.h"
+#include"Task.h"
 
 enum Error{
     UsageError,
@@ -55,6 +56,9 @@ public:
     }
 
     void Run(){
+        ThreadPool<> tp;
+        tp.Run();
+
         std::cout << "服务器启动" << std::endl;
         
         signal(SIGPIPE,SIG_IGN);
@@ -90,16 +94,21 @@ public:
             // pid_t rid = waitpid(id,nullptr,WNOHANG);
             // (void)rid;
 
-            // 多线程版
-            std::thread t(service,socketfd,ipstr,clientport);
-            t.detach();
+            // // 多线程版
+            // std::thread t(service,socketfd,ipstr,clientport);
+            // t.detach();
+
+            //线程池版
+            std::cout << "任务创建" << std::endl;
+            Task* tk = new Task(socketfd,ipstr,clientport);
+            tp.push(tk);
         }
     }
     ~TCPServer(){
         close(_listenSocketFD);
     }
 private:
-    static void service(int sockfd,const std::string& ipstr,const uint16_t& clientport){
+    static void service(int sockfd,const std::string ipstr,const uint16_t clientport){
         char buffer[1024];
         std::string echo_string;
         while(true){
