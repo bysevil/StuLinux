@@ -56,6 +56,8 @@ public:
 
     void Run(){
         std::cout << "服务器启动" << std::endl;
+        
+        signal(SIGPIPE,SIG_IGN);
         while(true){
             //获取新连接
             sockaddr_in client;
@@ -110,7 +112,11 @@ private:
                 std::cout << "[" << ipstr << " : " << clientport << "]# " << buffer << std::endl;
                 echo_string = "TCPServer echo# ";
                 echo_string += buffer;
-                write(sockfd,echo_string.c_str(),echo_string.size());
+                size_t nw = write(sockfd,echo_string.c_str(),echo_string.size());
+                if(n < 0){
+                    std::cout << "写入失败，可能是客户端断开连接" << std::endl;
+                    break;
+                }
             }
             else if(n == 0){
                 std::cout << "客户端断开连接" << "[" << ipstr << " : " << clientport << "]" << std::endl;

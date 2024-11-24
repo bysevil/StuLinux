@@ -35,11 +35,14 @@ int main(int argc, char* argv[]){
     while(true){
         std::cout << "[print]#";
         std::cin >> message;
-        write(sockfd, message.c_str(),message.size());
-
-        int n = read(sockfd, inbuffer, sizeof(inbuffer));
-        if(n > 0){
-            inbuffer[n] = '\0';
+        int nw = write(sockfd, message.c_str(),message.size());
+        if(nw < 0){
+            std::cout << "写入失败，可能是服务器关闭，程序退出" << std::endl;
+            break;
+        }
+        int nr = read(sockfd, inbuffer, sizeof(inbuffer));
+        if(nr > 0){
+            inbuffer[nr] = '\0';
             std::cout << inbuffer << std::endl;
         }
     }
