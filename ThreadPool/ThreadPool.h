@@ -7,7 +7,7 @@
 
 #include "Task.h"
 
-template <size_t threadnum = 5, class T = Task>
+template <size_t threadnum = 5, class T = Task, bool isdel = true>
 class ThreadPool
 {
 public:
@@ -31,17 +31,33 @@ public:
     // 将任务添加到任务队列
     void push(T*& tk)
     {
-        ////条件变量版本
-        //std::unique_lock<std::mutex> lck(_mtx);
-        //_qe.push(tk);
-        //_cv.notify_one();
-
-        //互斥锁版本
-        _mtx.lock();
+        //条件变量版本
+        
+        std::unique_lock<std::mutex> lck(_mtx);
         _qe.push(tk);
-        _mtx.unlock();
+        //std::cout << "任务加入任务队列" << std::endl;
+        _cv.notify_one();
+
+        // //互斥锁版本
+        // _mtx.lock();
+        // _qe.push(tk);
+        // _mtx.unlock();
     }
 
+    ~ThreadPool()
+    {
+        std::cout << "线程销毁" << std::endl;
+        if (!_qe.empty())
+        {
+            for (auto& e : _v) {
+                e->join();
+                delete e;
+                e = nullptr;
+            }
+        }
+    }
+
+private:
     // 线程开始从任务队列拿取任务并执行
     //static void Start(ThreadPool<threadnum>* tp)
     static void Start(std::queue<T*>* qe, std::mutex* mtx, std::condition_variable* cv)
@@ -57,10 +73,11 @@ public:
             tk = qe->front();
             qe->pop();
             lck.unlock();
-
-            cv->notify_one();
+            //std::cout << std::this_thread::get_id() << "获取到任务" << std::endl;
             tk->Start();
-            delete tk;
+            if(isdel == true){
+                delete tk;
+            }
             tk = nullptr;
 
             ////互斥锁版本
@@ -82,19 +99,6 @@ public:
         }
     }
 
-    ~ThreadPool()
-    {
-        if (!_qe.empty())
-        {
-            for (auto& e : _v) {
-                e->join();
-                delete e;
-                e = nullptr;
-            }
-        }
-    }
-
-private:
     std::mutex _mtx;
     std::queue<T*> _qe;
     std::vector<std::thread*> _v;
