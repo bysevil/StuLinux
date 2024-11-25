@@ -10,6 +10,8 @@
 #include<thread>
 #include"ThreadPool.h"
 #include"Task.h"
+#include"Deamon.h"
+
 
 enum Error{
     UsageError,
@@ -56,6 +58,7 @@ public:
     }
 
     void Run(){
+        deamon();
         ThreadPool<> tp;
         tp.Run();
 
@@ -63,6 +66,7 @@ public:
         
         signal(SIGPIPE,SIG_IGN);
         while(true){
+           
             //获取新连接
             sockaddr_in client;
             socklen_t len = sizeof(client);
