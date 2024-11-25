@@ -25,7 +25,7 @@ const int backlog = 5;
 
 class TCPServer{
 public:
-    TCPServer(const std::string& ip = default_ip, const uint16_t& port = default_port)
+    TCPServer(const uint16_t& port = default_port,const std::string& ip = default_ip)
     :_ip(ip)
     ,_port(port)
     ,_listenSocketFD(default_fd)
