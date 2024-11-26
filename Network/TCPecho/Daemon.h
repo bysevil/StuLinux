@@ -5,7 +5,7 @@
 
 const std::string& default_file = "/dev/null";
 
-void deamon(const std::string &cwd = ""){
+void my_daemon(const std::string &cwd = ""){
     //忽略信号以不受影响
 
     //创建子进程并退出父进程（进程组长）
@@ -20,7 +20,7 @@ void deamon(const std::string &cwd = ""){
     //将标准输出输入错误重定向到文件
     int fd = open(default_file.c_str(),O_RDWR);
     dup2(fd,0);
-    dup2(fd,0);
-    dup2(fd,0);
+    dup2(fd,1);
+    dup2(fd,2);
     close(fd);
 }

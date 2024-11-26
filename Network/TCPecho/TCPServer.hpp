@@ -10,7 +10,7 @@
 #include<thread>
 #include"ThreadPool.h"
 #include"Task.h"
-#include"Deamon.h"
+#include"Daemon.h"
 
 
 enum Error{
@@ -58,7 +58,7 @@ public:
     }
 
     void Run(){
-        deamon();
+        my_daemon();
         ThreadPool<> tp;
         tp.Run();
 

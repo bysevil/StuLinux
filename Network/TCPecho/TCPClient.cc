@@ -61,7 +61,6 @@ int main(int argc, char *argv[])
             std::cout << "[print]#";
             std::cin >> message;
             int nw = write(sockfd, message.c_str(), message.size());
-            std::cout << nw << std::endl;
 
             if (nw < 0)
             {

@@ -1,7 +1,7 @@
 tcp:
 	make tcpclient
 	make tcpserver
-tcpserver:TCPServer.hpp ServerTest.cc ThreadPool.h Task.h Deamon.h
+tcpserver:TCPServer.hpp ServerTest.cc ThreadPool.h Task.h Daemon.h
 	g++ -o $@ $^
 
 tcpclient:TCPClient.cc
